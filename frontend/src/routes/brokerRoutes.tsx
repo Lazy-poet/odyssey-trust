@@ -19,45 +19,57 @@ import {
   Logout
 } from "../screens/broker"
 import Spinner from 'components/Spinner'
+import Footer from "components/Footer/Footer";
 
 export default () => {
   const { isLoggedIn, } = useContext(AuthContext)
   const brokerRoutes = [
     {
-      path: "*",
-      element: <Navigate to={isLoggedIn ? 'dashboard' : "login"} />
-    },
-    (isLoggedIn ? {
-      path: "/dashboard",
-      element: <Suspense fallback={<Spinner />}><Home /></Suspense>,
-      children: [
+      path: 'broker', children: [
+
         {
           path: "",
-          element: <Suspense fallback={<Spinner />}><Navigate to="users" /></Suspense>
+          element: <Navigate to={isLoggedIn ? 'dashboard' : "broker/login"} />
         },
-        {
-          path: "users",
-          element: <Suspense fallback={<Spinner />}><FirmUsers /></Suspense>,
-          // index: true
-        },
-        { path: "verifycert", element: <Suspense fallback={<Spinner />}><VerifyCertificate /></Suspense> },
-        { path: "verifydrs", element: <Suspense fallback={<Spinner />}><VerifyDRS /></Suspense> },
+        (isLoggedIn ? {
+          path: "dashboard",
+          element: <Suspense fallback={<Spinner />}><Home /></Suspense>,
+          children: [
+            {
+              path: "",
+              element: <Suspense fallback={<Spinner />}><Navigate to="users" /></Suspense>
+            },
+            {
+              path: "*",
+              element: <Suspense fallback={<Spinner />}><Navigate to="users" /></Suspense>
+            },
+            {
+              path: "users",
+              element: <Suspense fallback={<Spinner />}><FirmUsers /></Suspense>,
+              // index: true
+            },
+            { path: "verifycert", element: <Suspense fallback={<Spinner />}><VerifyCertificate /></Suspense> },
+            { path: "verifydrs", element: <Suspense fallback={<Spinner />}><VerifyDRS /></Suspense> },
 
+          ]
+        } : {}),
+        { path: "register", element: <Suspense fallback={<Spinner />}><Registration /></Suspense> },
+        { path: "login", element: <Suspense fallback={<Spinner />}><Login /></Suspense>, index: true },
+        { path: "change-password", element: <Suspense fallback={<Spinner />}><ChangePassword /></Suspense> },
+        { path: "reset-password", element: <Suspense fallback={<Spinner />}><PasswordReset /></Suspense> }
       ]
-    } : {}),
-    { path: "/register", element: <Suspense fallback={<Spinner />}><Registration /></Suspense> },
-    { path: "/login", element: <Suspense fallback={<Spinner />}><Login /></Suspense>, index: true },
-    { path: "/change-password", element: <Suspense fallback={<Spinner />}><ChangePassword /></Suspense> },
-    { path: "/reset-password", element: <Suspense fallback={<Spinner />}><PasswordReset /></Suspense> }
+    }
   ]
   const location = useLocation()
   const background = location.state && (location.state as any).background
   return <>
     {useRoutes(brokerRoutes, background || location)}
     {background && useRoutes([{
-      path: '/dashboard', element: <Home />, children: [{
+      path: 'broker/dashboard', element: <Home />, children: [{
         path: "logout", element: <Suspense fallback={<Spinner />}><Logout /></Suspense>
       }]
     }])}
+    <Footer />
+
   </>
 }
