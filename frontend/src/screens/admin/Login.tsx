@@ -28,7 +28,7 @@ const LoginScreen = () => {
         </div>
       </div>
       <div className={css({ flex: 1, zIndex: 1, alignSelf: "center" })}>
-        <LoginForm onSubmit={() => navigate("/dashboard")} />
+        <LoginForm onSubmit={() => navigate("/admin/dashboard")} />
       </div>
     </Wrapper>
   )
